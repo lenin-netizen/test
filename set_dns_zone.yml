@@ -1,0 +1,57 @@
+---
+- hosts: nios
+  connection: local
+  gather_facts: no
+  vars:
+    nios_provider:
+     host: "172.16.155.215"
+     username: "admin"
+     password: "infoblox"
+    ansible_python_interpreter: "/usr/bin/env python3"
+  tasks:
+    - name: Create a forward DNS zone called ansible-test.com
+      nios_zone:
+        name: ansible-test.com
+        comment: local DNS zone
+        state: present
+        provider: "{{ nios_provider }}"
+
+    - name: Create a network on the default network view
+      nios_network:
+        network: 192.168.100.0/24
+        comment: sets the IPv4 network
+        options:
+          - name: domain-name
+            value: ansible.com
+        state: present
+        provider: "{{nios_provider}}"
+
+    - name: configure an ipv4 host record
+      nios_host_record:
+        name: host.ansible-test.com
+        ipv4:
+          - address: 192.168.100.1
+        state: present
+        provider: "{{nios_provider}}"
+    
+    - name: configure an ipv4 host1 record
+      nios_host_record:
+        name: host1.ansible-test.com
+        ipv4:
+          - address: 192.168.100.2
+        state: present
+        provider: "{{nios_provider}}"
+    - set_fact:
+        VIP:  "{{ lookup('nios_next_ip', '192.168.100.0/24', exclude=[formated_excludes]) | first }}"
+
+    - name: Print next IP address
+      debug:
+        msg: "The next available IP is {{ VIP }}"
+#    - name: configure an IPv4 host ODS1 record
+#      nios_host_record:
+#        name: ods1.ansible-test.com
+#        ipv4addrs:
+#          - ipv4addr:
+#              "{{ lookup('nios_next_ip', '192.168.100.0/24', provider={'host': '172.16.155.215', 'username': 'admin', 'password': 'infoblox'})[0] }}"
+#         state: present
+#        provider: "{{nios_provider}}"
