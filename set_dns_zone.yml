@@ -45,11 +45,11 @@
         state: present
         provider: "{{nios_provider}}"
     - set_fact:
-        VIP:  "{{ lookup('nios_next_ip', '192.168.100.0/24', exclude=[formated_excludes]) | first }}"
+        ipaddr:  "{{ lookup('nios_next_ip', '192.168.100.0/24', provider=nios_provider )}}"
 
     - name: Print next IP address
       debug:
-        msg: "The next available IP is {{ VIP }}"
+        msg: "The next available IP is {{ ipaddr }}"
 #    - name: configure an IPv4 host ODS1 record
 #      nios_host_record:
 #        name: ods1.ansible-test.com
