@@ -30,6 +30,7 @@
         provider: "{{nios_provider}}"
 
     - name: configure an ipv4 host record
+      become: true
       nios_host_record:
         name: host.ansible-test.com
         ipv4:
