@@ -8,6 +8,7 @@
      username: "admin"
      password: "infoblox"
     ansible_python_interpreter: "/usr/bin/env python3"
+  strategy: debug
   tasks:
     - name: Create a forward DNS zone called ansible-test.com
       nios_zone:
