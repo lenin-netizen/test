@@ -5,8 +5,8 @@
   vars:
     nios_provider:
      host: "172.16.155.215"
-     username: "admin"
-     password: "infoblox"
+     username: {{ ANSIBLE_NET_USERNAME }}
+     password: {{ ANSIBLE_NET_PASSWORD }}
     ansible_python_interpreter: "/usr/bin/env python3"
   tasks:
     - name: Create a forward DNS zone called ansible-test.com
